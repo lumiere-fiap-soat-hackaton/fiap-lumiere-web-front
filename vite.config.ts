@@ -5,7 +5,6 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
-
   return {
     plugins: [react(), tsconfigPaths()],
     css: {
@@ -16,11 +15,11 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       proxy: {
-        '/API_BASE_URL': {
+        '/server': {
           target: env.VITE_API_BASE_URL,
           changeOrigin: true,
           secure: true,
-          rewrite: (path) => path.replace(/^\/API_BASE_URL/, ''),
+          rewrite: (path) => path.replace(/^\/server/, ''),
           configure: (proxy) => {
             proxy.on('error', (err) => {
               console.log('proxy error', err);

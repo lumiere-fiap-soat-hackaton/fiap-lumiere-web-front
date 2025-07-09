@@ -1,0 +1,83 @@
+name: Build and Deploy to AWS Amplify
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+
+      - name: Run linting
+        run: |
+          npm run lint
+
+      - name: Run tests
+        run: |
+          npm test
+
+      - name: Build app
+        run: |
+          npm run build
+
+      - name: Configure AWS credentials
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Get Amplify App ID
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        id: get-amplify-app-id
+        run: |
+          APP_ID=$(aws ssm get-parameter --name "/${var.project_name}/amplify/app-id" --query "Parameter.Value" --output text)
+          echo "amplify_app_id=$APP_ID" >> $GITHUB_OUTPUT
+          echo "Retrieved Amplify App ID: $APP_ID"
+
+      - name: Deploy to AWS Amplify
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |          
+          # Upload build artifacts to S3
+          aws s3 cp deployment.zip s3://$S3_BUCKET/
+          
+          # Create a deployment
+          DEPLOYMENT_ID=$(aws amplify create-deployment \
+          --app-id $AMPLIFY_APP_ID \
+          --branch-name $BRANCH_NAME \
+          --output text \
+          --query 'jobId')
+          
+          # Start deployment with artifacts
+          aws amplify start-deployment \
+            --app-id $AMPLIFY_APP_ID \
+            --branch-name $BRANCH_NAME \
+            --job-id $DEPLOYMENT_ID \
+            --source-url $S3_URL
+            
+          echo "Deployment started for Amplify app ${{ steps.get-amplify-app-id.outputs.amplify_app_id }}"
+
+      - name: Clean up
+        if: always() && github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          rm -f deployment.zip
