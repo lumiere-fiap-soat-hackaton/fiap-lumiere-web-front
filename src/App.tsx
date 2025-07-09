@@ -1,14 +1,24 @@
-import lumiereLogo from './assets/logo.svg';
 import './App.css';
 
-function App() {
+import { BrowserRouter, Route, Routes } from 'react-router';
+import { Home, Landing, SignIn, SignUp } from '@/pages';
+import { AppLayout, AuthLayout } from '@/layouts';
 
+export const App = () => {
   return (
-    <div>
-      <img src={lumiereLogo} className="logo lumiere" alt="Lumiere logo" />
-      <h1>Lumiere Web Front</h1>
-    </div>
-  );
-}
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Landing />} />
 
-export default App;
+        <Route element={<AuthLayout />}>
+          <Route path="sign-in" element={<SignIn />} />
+          <Route path="sign-up" element={<SignUp />} />
+        </Route>
+
+        <Route path="home" element={<AppLayout />}>
+          <Route index element={<Home />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
+};
