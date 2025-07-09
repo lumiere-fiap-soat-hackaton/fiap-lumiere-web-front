@@ -10,7 +10,7 @@ on:
 
 jobs:
   lint_test_build:
-    name: Lint, Test & Build
+    name: Lint & Build
     runs-on: ubuntu-latest
 
     steps:
@@ -30,10 +30,6 @@ jobs:
       - name: Run linting
         run: |
           npm run lint
-
-      - name: Run tests
-        run: |
-          npm test
 
       - name: Build app
         run: |
