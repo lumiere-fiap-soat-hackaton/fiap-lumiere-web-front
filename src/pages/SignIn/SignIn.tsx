@@ -1,6 +1,6 @@
-import { SignInForm } from '@/components';
 import styles from './SignIn.module.css';
 import { NavLink } from 'react-router';
+import { SignInForm } from '@/modules/authentication/components';
 
 export const SignIn = () => {
   return (

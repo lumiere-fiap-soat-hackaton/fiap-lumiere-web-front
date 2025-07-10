@@ -21,14 +21,39 @@ export default defineConfig(({ mode }) => {
           secure: true,
           rewrite: (path) => path.replace(/^\/server/, ''),
           configure: (proxy) => {
-            proxy.on('error', (err) => {
-              console.log('proxy error', err);
+            proxy.on('error', (err, req) => {
+              console.log('\n🔴 PROXY ERROR');
+              console.log('━'.repeat(50));
+              console.log(`Time: ${new Date().toISOString()}`);
+              console.log(`URL: ${req?.url || 'N/A'}`);
+              console.log(`Method: ${req?.method || 'N/A'}`);
+              console.log(`Error: ${err.message}`);
+              console.log('━'.repeat(50));
             });
-            proxy.on('proxyReq', (_, req) => {
-              console.log('Sending Request to the Target:', req.method, req.url);
+            proxy.on('proxyReq', (proxyReq, req) => {
+              console.log('\n🟡 OUTGOING REQUEST');
+              console.log('━'.repeat(50));
+              console.log(`Time: ${new Date().toISOString()}`);
+              console.log(`Method: ${req.method}`);
+              console.log(`Original URL: ${req.url}`);
+              console.log(`Target: ${env.VITE_API_BASE_URL}${proxyReq.path}`);
+              console.log(`Headers: ${JSON.stringify(proxyReq.getHeaders(), null, 2)}`);
+              console.log('━'.repeat(50));
             });
             proxy.on('proxyRes', (proxyRes, req) => {
-              console.log('Received Response from the Target:', proxyRes.statusCode, req.url);
+              const statusColor = proxyRes?.statusCode && proxyRes?.statusCode >= 400 ? '🔴' :
+                proxyRes.statusCode && proxyRes?.statusCode >= 300 ? '🟠' : '🟢';
+
+              console.log(`\n${statusColor} INCOMING RESPONSE`);
+              console.log('━'.repeat(50));
+              console.log(`Time: ${new Date().toISOString()}`);
+              console.log(`Status: ${proxyRes.statusCode} ${proxyRes.statusMessage}`);
+              console.log(`Method: ${req.method}`);
+              console.log(`URL: ${req.url}`);
+              console.log(`Content-Type: ${proxyRes.headers['content-type'] || 'N/A'}`);
+              console.log(`Content-Length: ${proxyRes.headers['content-length'] || 'N/A'}`);
+              console.log(`Response Time: ${Date.now() - (req.startTime || Date.now())}ms`);
+              console.log('━'.repeat(50));
             });
           },
         },

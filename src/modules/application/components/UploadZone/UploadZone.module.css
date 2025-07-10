@@ -1,0 +1,13 @@
+.upload-zone-wrapper {
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  border: 2px dashed var(--color-foreground-3);
+  background-color: var(--color-background-1);
+  transition: background-color 0.2s ease;
+}
+
+.upload-zone-wrapper:hover {
+  background-color: var(--color-background-3);
+}

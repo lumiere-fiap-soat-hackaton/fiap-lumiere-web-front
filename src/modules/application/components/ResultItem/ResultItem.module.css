@@ -1,0 +1,22 @@
+.result-item-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 2px dashed var(--color-foreground-3);
+  background-color: var(--color-background-3);
+
+  &.failed{
+    border-color: var(--color-failure);
+  }
+}
+
+
+.result-item-download-button {
+  background-color: var(--color-primary);
+
+  &:hover{
+    background-color: var(--color-background-2);
+  }
+}
