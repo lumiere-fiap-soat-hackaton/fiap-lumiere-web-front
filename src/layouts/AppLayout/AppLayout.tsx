@@ -1,34 +1,10 @@
-import { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router';
-
-import { useUserData } from '@/modules/authentication/hooks';
 import SignOutButton from '@/modules/authentication/components/SignOutButton/SignOutButton';
 import styles from './AppLayout.module.css';
-
-const user = JSON.parse(localStorage.getItem('user') || '{}');
+import { useAuth } from '@/contexts';
 
 export const AppLayout = () => {
-  const { fetchAuthenticatedUserData } = useUserData();
-
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const validateAuth = async () => {
-      try {
-        await fetchAuthenticatedUserData();
-
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error('Authentication validation error:', error);
-        setIsAuthenticated(false);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    validateAuth();
-  }, [fetchAuthenticatedUserData]);
+  const { isAuthenticated, isLoading, user } = useAuth();
 
   if (isLoading) {
     return (
@@ -46,12 +22,15 @@ export const AppLayout = () => {
 
   return (
     <div className={styles.app_layout}>
-      <p className={styles.greetings}>Olá, {user?.name || user?.email || 'Usuário'}</p>
-      <header>
-        {user?.picture && <img src={user.picture} alt="Foto do perfil" />}
-
-        <h2>🎥 Video Pictures - POC</h2>
+      <div className={styles.user_session}>
         <SignOutButton />
+      </div>
+      <header>
+        <h2>🎥 Video Pictures - POC</h2>
+        <div className={styles.user_session}>
+          {user?.picture && <img src={user.picture} alt="Foto do perfil" />}
+          <p className={styles.greetings}>Olá, {user?.name || user?.email || 'Usuário'}</p>  | <p>sair</p>
+        </div>
       </header>
       <main>
         <Outlet />

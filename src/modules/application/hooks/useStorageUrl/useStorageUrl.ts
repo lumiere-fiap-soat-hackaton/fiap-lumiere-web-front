@@ -9,6 +9,7 @@ type TPayload = {
 type TResult = {
   fileName: string;
   presignedUrl: string;
+  metadata: Record<string, string>;
 }[];
 
 type UseStorageUrlOptions = {
