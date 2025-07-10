@@ -1,21 +1,24 @@
 import { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router';
-import SignOutButton from '@/components/SignOutButton/SignOutButton.tsx';
+
+import { useUserData } from '@/modules/authentication/hooks';
+import SignOutButton from '@/modules/authentication/components/SignOutButton/SignOutButton';
 import styles from './AppLayout.module.css';
 
+const user = JSON.parse(localStorage.getItem('user') || '{}');
+
 export const AppLayout = () => {
+  const { fetchAuthenticatedUserData } = useUserData();
+
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const validateAuth = async () => {
       try {
-        const response = await fetch('API_BASE_URL/auth/user-data', {
-          method: 'GET',
-          credentials: 'include',
-        });
+        await fetchAuthenticatedUserData();
 
-        setIsAuthenticated(response.ok);
+        setIsAuthenticated(true);
       } catch (error) {
         console.error('Authentication validation error:', error);
         setIsAuthenticated(false);
@@ -25,7 +28,7 @@ export const AppLayout = () => {
     };
 
     validateAuth();
-  }, []);
+  }, [fetchAuthenticatedUserData]);
 
   if (isLoading) {
     return (
@@ -42,15 +45,17 @@ export const AppLayout = () => {
   }
 
   return (
-    <div className={styles.page_wrapper}>
-      <header className={styles.page_header}>
-        <ul className={styles.nav_links}>
-          <li><SignOutButton /></li>
-        </ul>
+    <div className={styles.app_layout}>
+      <p className={styles.greetings}>Olá, {user?.name || user?.email || 'Usuário'}</p>
+      <header>
+        {user?.picture && <img src={user.picture} alt="Foto do perfil" />}
+
+        <h2>🎥 Video Pictures - POC</h2>
+        <SignOutButton />
       </header>
-      <div className={styles.page_content}>
+      <main>
         <Outlet />
-      </div>
+      </main>
     </div>
   );
 };
