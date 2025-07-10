@@ -52,7 +52,6 @@ export default defineConfig(({ mode }) => {
               console.log(`URL: ${req.url}`);
               console.log(`Content-Type: ${proxyRes.headers['content-type'] || 'N/A'}`);
               console.log(`Content-Length: ${proxyRes.headers['content-length'] || 'N/A'}`);
-              console.log(`Response Time: ${Date.now() - (req.startTime || Date.now())}ms`);
               console.log('━'.repeat(50));
             });
           },
