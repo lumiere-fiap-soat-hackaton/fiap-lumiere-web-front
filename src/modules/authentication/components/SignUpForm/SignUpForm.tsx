@@ -2,29 +2,26 @@ import * as React from 'react';
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router';
 import { ArrowRight, Eye, EyeOff, Lock, Mail } from 'lucide-react';
-
-import { useSignUp } from '@/modules/authentication/hooks';
-import styles from './SignUpForm.module.css';
 import Input from '@/components/input/Input.tsx';
 import Button from '@/components/button/Button.tsx';
+import { useAuth } from '@/contexts/AuthContext.tsx';
+import styles from './SignUpForm.module.css';
 
 export const SignUpForm = () => {
-  const { signUpWithEmailAndPassword, sendSignUpVerificationCode } = useSignUp();
   const navigate = useNavigate();
+  const { signUp, verify, step } = useAuth();
 
-  const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleBackToSignUp = () => {
-    setStep(1);
-    navigate('sign-up', { state: { email, step: 1 } });
+    navigate('/sign-up');
   };
 
   const handleCreateUser = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -33,6 +30,7 @@ export const SignUpForm = () => {
 
     try {
       setIsLoading(true);
+
       if (!email) {
         setErrors(prev => ({ ...prev, email: 'E-mail é obrigatório' }));
         return;
@@ -50,15 +48,13 @@ export const SignUpForm = () => {
         return;
       }
 
-      const success = await signUpWithEmailAndPassword(email, password);
+      const success = await signUp(email, password);
 
-      if (success) {
-        setStep(2);
-        navigate('/sign-up', { state: { email, step: 2 } });
+      if (!success) {
+        setErrors({ email: 'E-mail já cadastrado ou inválido' });
       }
     } catch (err) {
       setErrors({ email: 'Sign up - create user failed' });
-      //setError((err as Error).message || 'Sign up - create user failed');
       console.error('Error on user sign-up:', err);
     } finally {
       setIsLoading(false);
@@ -71,6 +67,7 @@ export const SignUpForm = () => {
 
     try {
       setIsLoading(true);
+
       if (!verificationCode) {
         setErrors(prev => ({ ...prev, verificationCode: 'Código é obrigatório' }));
         return;
@@ -80,7 +77,7 @@ export const SignUpForm = () => {
         return;
       }
 
-      const success = await sendSignUpVerificationCode(email, verificationCode);
+      const success = await verify(verificationCode);
 
       if (success) {
         navigate('/dashboard');
@@ -89,7 +86,6 @@ export const SignUpForm = () => {
       }
     } catch (err) {
       setErrors({ email: 'Sign up - confirm user failed' });
-      //setError((err as Error).message || 'Sign up - confirm user failed');
       console.log('Error on account verification:', err);
     } finally {
       setIsLoading(false);
@@ -196,10 +192,6 @@ export const SignUpForm = () => {
                 error={errors.verificationCode}
                 maxLength={6}
               />
-
-              <div className={styles.testCodeHint}>
-                Use o código <span className={styles.testCodeValue}>123456</span> para testar
-              </div>
 
               <div className={styles.buttonGroup}>
                 <Button

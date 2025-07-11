@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router';
 import { AlertCircle, CheckCircle, Clock, Upload, XCircle } from 'lucide-react';
 
-import { useAuth } from '@/contexts';
-import { UserRecord } from '@/modules/application/components/UserRecord';
-import styles from './Dashboard.module.css';
+import { useAuth } from '@/contexts/AuthContext.tsx';
 import { type RecordItemStatus } from '@/modules/application/providers/RecordsProvider.tsx';
-import Button from '@/components/button/Button.tsx';
 import { useRecordsContext } from '@/modules/application/hooks/userRecordsContext';
+import { UserRecord } from '@/modules/application/components/UserRecord';
+import Button from '@/components/button/Button.tsx';
+import styles from './Dashboard.module.css';
 
 const statusConfig = {
   PENDING: {

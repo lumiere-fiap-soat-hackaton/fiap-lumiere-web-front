@@ -1,20 +1,24 @@
-import { Navigate, Outlet, useLocation } from 'react-router';
+import { Navigate, Outlet } from 'react-router';
 import { CameraIcon } from 'lucide-react';
 
-import { useAuth } from '@/contexts';
 import globalStyles from '@/styles/globals.module.css';
 import styles from './AuthLayout.module.css';
+import { useAuth } from '@/contexts/AuthContext.tsx';
+import PageTransition from '@/components/pageTransition/PageTransition.tsx';
 
 interface LayoutProps {
   showHeader?: boolean;
 }
 
 export const AuthLayout = ({ showHeader = true }: LayoutProps) => {
-  const { isAuthenticated, isLoading } = useAuth();
-  const location = useLocation();
+  const { user , isAuthorizing} = useAuth()
 
-  if (isAuthenticated && !isLoading) {
-    return <Navigate to="/dashboard" state={{ from: location }} replace />;
+  if (isAuthorizing) {
+    return <PageTransition />;
+  }
+
+  if (!isAuthorizing && user) {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return (

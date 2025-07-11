@@ -3,20 +3,20 @@ import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 
-import { useSignIn } from '@/modules/authentication/hooks';
 import Input from '@/components/input/Input.tsx';
-import styles from './SignInForm.module.css';
 import Button from '@/components/button/Button.tsx';
+import styles from './SignInForm.module.css';
+import { useAuth } from '@/contexts/AuthContext.tsx';
 
 export function SignInForm() {
   const navigate = useNavigate();
-  const { signInWithEmailAndPassword } = useSignIn();
+  const { signIn } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
@@ -35,7 +35,7 @@ export function SignInForm() {
         return;
       }
 
-      const success = await signInWithEmailAndPassword(email, password);
+      const success = await signIn(email, password);
 
       if (success) {
         navigate('/dashboard');
@@ -43,8 +43,7 @@ export function SignInForm() {
         setErrors({ email: 'E-mail ou senha inválidos' });
       }
     } catch (err) {
-      setErrors({ email: 'E-mail ou senha inválidos' });
-      //setErrors((err as Error).message || 'Sign in failed');
+      setErrors({ email: 'Tivemos um problema ao iniciar sua sessão. Tente novamente mais tarde.' });
       console.log('Error on user sign-in:', err);
     } finally {
       setIsLoading(false);
