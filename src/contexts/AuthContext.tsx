@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { createContext, type ReactNode, useContext, useEffect, useState } from 'react';
 import { useUserData } from '@/modules/authentication/hooks';
 import { getGravatarUrl } from '@/utils/gravatar';
 
@@ -28,7 +28,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const userData = await fetchAuthenticatedUserData();
 
-      // If user doesn't have a picture, use Gravatar based on email
       if (userData && userData.email && !userData.picture) {
         userData.picture = getGravatarUrl(userData.email, 100);
       }
@@ -52,7 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     user,
     isAuthenticated,
     isLoading,
-    refreshUserData
+    refreshUserData,
   };
 
   return (

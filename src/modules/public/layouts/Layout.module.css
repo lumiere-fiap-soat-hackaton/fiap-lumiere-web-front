@@ -1,0 +1,69 @@
+
+.layout {
+  min-height: 100vh;
+  background-color: hsl(218, 25%, 8%);
+  position: relative;
+}
+
+.header {
+  border-bottom: 1px solid hsla(230, 20%, 20%, 0.5);
+  backdrop-filter: blur(4px);
+  background: hsla(218, 25%, 8%, 0.8);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.headerContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.iconContainer {
+  position: relative;
+}
+
+.iconDot {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 12px;
+  height: 12px;
+  background-color: hsl(261, 45%, 55%);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.875rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, hsl(44, 85%, 65%) 0%, hsl(261, 45%, 55%) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 16px;
+}

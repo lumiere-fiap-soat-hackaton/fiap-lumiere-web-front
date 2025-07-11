@@ -1,0 +1,49 @@
+.container {
+  padding: 2rem 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.headerContent h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: hsl(48, 15%, 88%);
+  margin-bottom: 0.5rem;
+}
+
+.headerContent .userName {
+  background: linear-gradient(135deg, hsl(44, 85%, 65%) 0%, hsl(261, 45%, 55%) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.headerContent p {
+  color: hsl(48, 15%, 65%);
+  font-size: 1.125rem;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.grid {
+  display: grid;
+  gap: 2rem;
+}
+
+.statusSection {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
