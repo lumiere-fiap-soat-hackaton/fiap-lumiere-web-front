@@ -21,6 +21,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
 
@@ -52,6 +53,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }*/
       setIsAuthorizing(true);
 
+
       fetchAuthenticatedUserData()
         .then((userData) => {
           setUser(userData as unknown as User);
@@ -63,7 +65,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         .finally(() => {
           setIsAuthorizing(false);
         });
-    }, []);
+    }, [fetchAuthenticatedUserData]);
 
     const signIn = async (username: string, password: string): Promise<boolean> => {
       //setIsAuthorizing(true);
