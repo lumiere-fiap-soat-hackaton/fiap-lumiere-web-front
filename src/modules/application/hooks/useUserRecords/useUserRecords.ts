@@ -21,7 +21,7 @@ export const useUserRecords = ({ statuses = [], refetchInterval }: UseUserRecord
         params.set('statuses', statuses.join(','));
       }
 
-      const response = await client.get(`/api/v1/storage/user-records`, { params });
+      const response = await client.get(`server/api/v1/storage/user-records`, { params });
       return response.data;
     },
   });

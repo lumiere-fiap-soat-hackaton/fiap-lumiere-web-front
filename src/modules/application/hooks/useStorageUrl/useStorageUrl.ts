@@ -11,7 +11,7 @@ export const useStorageUrl = ({ resource }: UseStorageUrlOptions) => {
 
   return useMutation({
     mutationFn: async (data: TStorageUrlPayload): Promise<TStorageUrlResult> => {
-      const response = await client.post(`/api/v1/storage/${resource}`, data);
+      const response = await client.post(`server/api/v1/storage/${resource}`, data);
       return response.data;
     },
   });
