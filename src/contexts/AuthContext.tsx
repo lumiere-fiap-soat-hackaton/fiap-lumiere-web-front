@@ -65,7 +65,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         .finally(() => {
           setIsAuthorizing(false);
         });
-    }, [fetchAuthenticatedUserData]);
+    }, []);
 
     const signIn = async (username: string, password: string): Promise<boolean> => {
       //setIsAuthorizing(true);
