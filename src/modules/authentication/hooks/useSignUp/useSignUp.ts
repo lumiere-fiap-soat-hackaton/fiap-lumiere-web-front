@@ -1,6 +1,6 @@
 export const useSignUp = () => {
 
-  const signUpWithEmailAndPassword = async (username: string, password: string): Promise<void> => {
+  const signUpWithEmailAndPassword = async (username: string, password: string): Promise<boolean> => {
     const response = await fetch(`server/auth/sign-up/create`, {
       method: 'POST',
       credentials: 'include',
@@ -13,10 +13,10 @@ export const useSignUp = () => {
       throw new Error(errorData ?? 'An error occurred during sign-up');
     }
 
-    return response.json();
+    return response.ok;
   };
 
-  const sendSignUpVerificationCode = async (username: string, verifyCode: string): Promise<void> => {
+  const sendSignUpVerificationCode = async (username: string, verifyCode: string): Promise<boolean> => {
     const response = await fetch('/server/auth/sign-up/confirm', {
       method: 'POST',
       credentials: 'include',
@@ -29,7 +29,7 @@ export const useSignUp = () => {
       throw new Error(errorData ?? 'An error occurred during verification');
     }
 
-    await response.json();
+    return  response.ok;
   };
 
   return { signUpWithEmailAndPassword, sendSignUpVerificationCode };

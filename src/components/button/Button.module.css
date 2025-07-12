@@ -1,0 +1,97 @@
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  text-decoration: none;
+}
+
+.button:focus {
+  outline: 2px solid hsl(44, 85%, 65%);
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Variants */
+.default {
+  background-color: hsl(44, 85%, 65%);
+  color: hsl(220, 25%, 8%);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.default:hover {
+  background-color: hsl(44, 85%, 58%);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.secondary {
+  background-color: hsl(240, 15%, 18%);
+  color: hsl(48, 15%, 88%);
+  border: 1px solid hsl(230, 20%, 20%);
+}
+
+.secondary:hover {
+  background-color: hsl(240, 15%, 14%);
+}
+
+.ghost {
+  background: transparent;
+  color: hsl(48, 15%, 88%);
+}
+
+.ghost:hover {
+  background-color: hsl(261, 45%, 55%);
+  color: hsl(48, 15%, 88%);
+}
+
+.destructive {
+  background-color: hsl(0, 65%, 55%);
+  color: hsl(48, 15%, 88%);
+}
+
+.destructive:hover {
+  background-color: hsl(0, 65%, 48%);
+}
+
+/* Sizes */
+.sm {
+  height: 36px;
+  padding: 0 12px;
+  font-size: 0.875rem;
+}
+
+.md {
+  height: 44px;
+  padding: 0 24px;
+  font-size: 1rem;
+}
+
+.lg {
+  height: 56px;
+  padding: 0 32px;
+  font-size: 1.125rem;
+}
+
+.loading {
+  margin-right: 8px;
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

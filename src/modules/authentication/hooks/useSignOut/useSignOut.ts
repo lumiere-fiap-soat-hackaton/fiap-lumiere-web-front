@@ -1,5 +1,5 @@
 export const useSignOut = () => {
-  const signOutAuthenticatedUser = async (): Promise<void> => {
+  const signOutAuthenticatedUser = async (): Promise<boolean> => {
     const response = await fetch(`server/auth/sign-out`, {
       method: 'POST',
       credentials: 'include',
@@ -11,7 +11,7 @@ export const useSignOut = () => {
       throw new Error(errorData ?? 'Error occurred during sign-out');
     }
 
-    return response.json();
+    return response.ok;
   };
 
   return { signOutAuthenticatedUser };
