@@ -11,7 +11,7 @@ type FilePayload = {
 export const useFileUpload = () => {
   const { mutateAsync, isPending, isError, isSuccess } = useStorageUrl({ resource: 'upload-url' });
 
-  const execute = async (files: FileList): Promise<Awaited<TResult>[]> => {
+  const execute = async (files: File[]): Promise<Awaited<TResult>[]> => {
     const fileMetadataMap = new Map<string, File>();
 
     const payload: FilePayload[] = Array.from(files).map((file) => {

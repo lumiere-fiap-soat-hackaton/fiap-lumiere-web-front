@@ -1,11 +1,11 @@
 import { createContext, useContext } from 'react';
-import type { RecordItem, RecordItemStatus } from '@/modules/application/providers/RecordsProvider.tsx';
+import type { RecordItem, RecordItemStatus, TBucketResponse } from '@/modules/application/types.ts';
 
 interface RecordsContextType {
-  files: RecordItem[];
-  uploadFiles: (files: File[]) => void;
+  recordsList: RecordItem[];
+  uploadFiles: (files: File[]) => Promise<Awaited<TBucketResponse>[]>;
+  downloadFiles: (fileKeys: string[]) => Promise<Awaited<void>[]>;
   updateFileStatus: (id: string, status: RecordItemStatus, progress?: number) => void;
-  downloadFile: (id: string) => void;
 }
 
 export const RecordsContext = createContext<RecordsContextType | null>(null);

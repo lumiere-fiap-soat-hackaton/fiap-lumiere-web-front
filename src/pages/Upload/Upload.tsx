@@ -3,15 +3,16 @@ import { ArrowLeft, FileVideo, Plus, Upload as UploadIcon, X } from 'lucide-reac
 import styles from './Upload.module.css';
 import { useNavigate } from 'react-router';
 import Button from '@/components/button/Button.tsx';
-import { useRecordsContext } from '@/modules/application/hooks/userRecordsContext';
+import { useRecordsContext } from '@/modules/application/providers/useRecordsContext.ts';
 
 export const Upload: React.FC = () => {
+  const navigate = useNavigate();
+  const { uploadFiles } = useRecordsContext();
+
   const [files, setFiles] = useState<File[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { uploadFiles } = useRecordsContext();
-  const navigate = useNavigate();
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -51,9 +52,8 @@ export const Upload: React.FC = () => {
     setIsUploading(true);
 
     // Simular delay de upload
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await uploadFiles(files);
 
-    uploadFiles(files);
     setFiles([]);
     setIsUploading(false);
     navigate('/dashboard');

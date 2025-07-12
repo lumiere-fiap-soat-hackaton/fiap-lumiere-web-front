@@ -2,11 +2,11 @@ import { useNavigate } from 'react-router';
 import { AlertCircle, CheckCircle, Clock, Upload, XCircle } from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext.tsx';
-import { type RecordItemStatus } from '@/modules/application/providers/RecordsProvider.tsx';
-import { useRecordsContext } from '@/modules/application/hooks/userRecordsContext';
 import { UserRecord } from '@/modules/application/components/UserRecord';
 import Button from '@/components/button/Button.tsx';
+import { useRecordsContext } from '@/modules/application/providers/useRecordsContext.ts';
 import styles from './Dashboard.module.css';
+import type { RecordItemStatus } from '@/modules/application/types.ts';
 
 const statusConfig = {
   PENDING: {
@@ -41,47 +41,9 @@ const statusConfig = {
 
 export const Dashboard = () => {
   const navigate = useNavigate();
+
+  const { recordsList } = useRecordsContext();
   const { user } = useAuth();
-  const { files } = useRecordsContext();
-
-  /*
-    const { execute: handleUpload } = useFileUpload();
-    const { execute: handleDownload } = useFileDownload();
-
-    const {
-      data: queued,
-      isLoading: loadingPendingRecords,
-      error: pendingRecordsError,
-    } = useUserRecords({
-      statuses: ['PENDING'],
-      refetchInterval: 0,
-    });
-
-    const {
-      data: finished,
-      isLoading: loadingCompletedRecords,
-      error: completedRecordsError,
-    } = useUserRecords({
-      statuses: ['COMPLETED', 'FAILED'],
-      refetchInterval: 0,
-    });
-
-    const pendingRecords = queued?.map((r) => ({
-      key: r.id,
-      fileName: r.sourceFileName,
-      progress: 50,
-    })) ?? [];
-
-    const completedRecords = finished?.map((r) => ({
-      key: r.id,
-      status: r.status,
-      sourceFileName: r.sourceFileName,
-      resultFileKey: r.resultFileKey ?? '',
-    })) ?? [];
-  */
-  const getVideosByStatus = (status: RecordItemStatus) => {
-    return files.filter(video => video.status === status);
-  };
 
   return (
     <div className={styles.container}>
@@ -101,10 +63,9 @@ export const Dashboard = () => {
 
       <div className={styles.grid}>
         {Object.entries(statusConfig).map(([status, config]) => {
-          const statusVideos = getVideosByStatus(status as RecordItemStatus);
 
           return (
-            <UserRecord key={status} statusVideos={statusVideos} config={config} status={status as RecordItemStatus} />
+            <UserRecord key={status} recordsList={recordsList} config={config} status={status as RecordItemStatus} />
           );
         })}
       </div>
@@ -134,3 +95,10 @@ export const Dashboard = () => {
       </div>
     </div>
 * */
+
+/*
+application/x-troff-msvideo
+video/avi
+video/msvideo
+video/x-msvideo
+ */

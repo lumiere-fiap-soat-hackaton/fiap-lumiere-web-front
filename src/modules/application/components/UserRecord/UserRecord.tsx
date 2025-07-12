@@ -3,8 +3,8 @@ import { Download } from 'lucide-react';
 
 import styles from './UserRecord.module.css';
 import Button from '@/components/button/Button';
-import { type RecordItem, type RecordItemStatus } from '@/modules/application/providers/RecordsProvider.tsx';
-import { useRecordsContext } from '@/modules/application/hooks/userRecordsContext';
+import { useRecordsContext } from '@/modules/application/providers/useRecordsContext.ts';
+import type { RecordItem, RecordItemStatus } from '@/modules/application/types.ts';
 
 type recordConfig = {
   icon: React.ComponentType;
@@ -15,11 +15,11 @@ type recordConfig = {
 type Props = {
   config: recordConfig;
   status: RecordItemStatus;
-  statusVideos: RecordItem[];
+  recordsList: RecordItem[];
 }
 
-export const UserRecord = ({ config, statusVideos, status }: Props) => {
-  const { downloadFile } = useRecordsContext();
+export const UserRecord = ({ config, recordsList, status }: Props) => {
+  const { downloadFiles } = useRecordsContext();
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('pt-BR', {
@@ -37,30 +37,30 @@ export const UserRecord = ({ config, statusVideos, status }: Props) => {
         <span className={styles.emoji}>{config.emoji}</span>
         <h2>{config.text}</h2>
         <span className={`${styles.statusBadge} ${styles[status.toLowerCase()]}`}>
-            {statusVideos.length}
+            {recordsList.length}
         </span>
       </div>
 
-      {statusVideos.length === 0 ? (
+      {recordsList.length === 0 ? (
         <div className={styles.emptyState}>
           <config.icon />
           <p>Nenhum vídeo {config.text.toLowerCase()}</p>
         </div>
       ) : (
         <div className={styles.videosList}>
-          {statusVideos.map((video) => (
-            <div key={video.id} className={styles.videoItem}>
+          {recordsList.map((recordItem) => (
+            <div key={recordItem.id} className={styles.videoItem}>
               <div className={styles.videoContent}>
                 <div className={styles.videoInfo}>
-                  <h3>{video.filename}</h3>
+                  <h3>{recordItem.sourceFileName}</h3>
                   <p>
-                    Enviado em {formatDate(video.uploadedAt)}
-                    {video.completedAt && (<> • Finalizado em {formatDate(video.completedAt)}</>)}
+                    {recordItem.createdAt && (<>Enviado em {formatDate(recordItem.createdAt)}</>)}
+                    {recordItem.updatedAt && (<> • Finalizado em {formatDate(recordItem.updatedAt)}</>)}
                   </p>
                 </div>
                 <div className={styles.videoActions}>
-                  {video.status === 'COMPLETED' && (
-                    <Button variant="secondary" size="sm" onClick={() => downloadFile(video.id)}>
+                  {recordItem.status === 'COMPLETED' && (
+                    <Button variant="secondary" size="sm" onClick={() => downloadFiles([recordItem.id])}>
                       <Download size={18} className="w-4 h-4" />
                       <span>Download</span>
                     </Button>
@@ -71,19 +71,19 @@ export const UserRecord = ({ config, statusVideos, status }: Props) => {
                   </div>
                 </div>
               </div>
-              {(video.status === 'IN_PROGRESS') && (
+              {(recordItem.status === 'IN_PROGRESS') && (
                 <>
                   <div className={styles.progressSection}>
                     <div className={styles.progressHeader}>
                       <span className={styles.label}>Progresso</span>
-                      <span className={styles.value}>{Math.round(video.progress)}%</span>
+                      <span className={styles.value}>{Math.round(recordItem.progress)}%</span>
                     </div>
                   </div>
 
                   <div className={styles.progressBar}>
                     <div
-                      className={`${styles.progressFill} ${styles[video.status === 'IN_PROGRESS' ? 'in_progress' : 'pending']}`}
-                      style={{ width: `${video.progress}%` }}
+                      className={`${styles.progressFill} ${styles[recordItem.status === 'IN_PROGRESS' ? 'in_progress' : 'pending']}`}
+                      style={{ width: `${recordItem.progress ?? 100}%` }}
                     ></div>
                   </div>
                 </>
